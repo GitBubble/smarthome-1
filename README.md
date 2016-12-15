@@ -1,0 +1,2 @@
+# smarthome
+Personal smarthome software.

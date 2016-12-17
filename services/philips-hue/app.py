@@ -1,7 +1,10 @@
 import json
 import sys
-import config
+import configparser
 import philips
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 argv = {}
 
@@ -10,7 +13,7 @@ for sys_argv in sys.argv:
     if(len(split_argv) > 1):
         argv[split_argv[0]] = split_argv[1]
 
-PhilipsHue = philips.Hue(config.philips_hue_ip,config.philips_hue_username)
+PhilipsHue = philips.Hue(config['philips.hue']['ip'],config['philips.hue']['username'])
 
 if(argv['mode'] == 'light'):
     light_number = 0

@@ -76,19 +76,19 @@ class Hue:
             if(self.data[data]['type'] == 'ZLLPresence'):
                 tmp_sensor['state'] = {
                     'type' : 'Presence',
-                    'presence' : str(self.data[data]['state']['presence'])
+                    'value' : str(self.data[data]['state']['presence'])
                 }
 
             if(self.data[data]['type'] == 'ZLLTemperature'):
                 tmp_sensor['state'] = {
                     'type' : 'Temperature',
-                    'temperature' : int(self.data[data]['state']['temperature'])
+                    'value' : int(self.data[data]['state']['temperature'])
                 }
 
             if(self.data[data]['type'] == 'ZLLLightLevel'):
                 tmp_sensor['state'] = {
                     'type' : 'LightLevel',
-                    'lightlevel' : int(self.data[data]['state']['lightlevel'])
+                    'value' : int(self.data[data]['state']['lightlevel'])
                 }
 
             if(sensors[uniqueid]['battery'] is None and 'config' in self.data[data] and 'battery' in self.data[data]['config'] and self.data[data]['config']['battery'] != 'None'):

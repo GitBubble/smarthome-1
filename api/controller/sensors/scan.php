@@ -12,13 +12,21 @@ class Obj {
           'uniqueid' => $val->uniqueid
         ]);
 
+        $sensors = [];
+        foreach($val->sensors AS $sensor_val) {
+          $sensors[strtolower($sensor_val->state->type)] = [
+            'id' => $sensor_val->id,
+            'value' => $sensor_val->state->value,
+          ];
+        }
+
         if(isset($document['_id'])) {
           $collection->updateOne([
             'uniqueid' => $val->uniqueid
           ],[
             '$set' => [
               'battery' => $val->battery,
-              'sensors' => $val->sensors,
+              'sensors' => $sensors,
               'updated_at' => new MongoDB\BSON\UTCDateTime(),
             ]
           ]);
@@ -26,7 +34,7 @@ class Obj {
           $collection->insertOne([
             'uniqueid' => $val->uniqueid,
             'battery' => $val->battery,
-            'sensors' => $val->sensors,
+            'sensors' => $sensors,
             'updated_at' => new MongoDB\BSON\UTCDateTime(),
             'created_at' => new MongoDB\BSON\UTCDateTime(),
           ]);

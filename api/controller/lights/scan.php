@@ -1,40 +1,35 @@
 <?php
 class Obj {
   function get() {
-    $return = json_decode(shell_exec('python ../services/philips-hue/app.py mode=sensor do=scan'));
+    $return = json_decode(shell_exec('python ../services/philips-hue/app.py mode=light do=scan'));
 
     if(count($return) > 0) {
       $mongo = new MongoDB\Client("mongodb://". MONGODB_IP .":". MONGODB_PORT);
-      $collection = $mongo->smarthome->sensors;
+      $collection = $mongo->smarthome->lights;
 
       foreach($return AS $key => $val) {
         $document = $collection->findOne([
           'uniqueid' => $val->uniqueid
         ]);
 
-        $sensors = [];
-        foreach($val->sensors AS $sensor_val) {
-          $sensors[strtolower($sensor_val->state->type)] = [
-            'id' => $sensor_val->id,
-            'value' => $sensor_val->state->value,
-          ];
-        }
-
         if(isset($document['_id'])) {
           $collection->updateOne([
             'uniqueid' => $val->uniqueid
           ],[
             '$set' => [
-              'battery' => $val->battery,
-              'sensors' => $sensors,
+              'id' => $key,
+              'swversion' => $val->swversion,
+              'state' => $val->state,
               'updated_at' => new MongoDB\BSON\UTCDateTime(),
             ]
           ]);
         } else {
           $collection->insertOne([
+            'id' => $key,
             'uniqueid' => $val->uniqueid,
-            'battery' => $val->battery,
-            'sensors' => $sensors,
+            'modelid' => $val->modelid,
+            'swversion' => $val->swversion,
+            'state' => $val->state,
             'updated_at' => new MongoDB\BSON\UTCDateTime(),
             'created_at' => new MongoDB\BSON\UTCDateTime(),
           ]);
@@ -47,7 +42,7 @@ class Obj {
       ];
     } else {
       return [
-        'content' => 'There are none sensor founds right now!',
+        'content' => 'There are none lights founds right now!',
         'status' => 404
       ];
     }

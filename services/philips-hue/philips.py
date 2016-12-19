@@ -43,6 +43,27 @@ class Hue:
             for lights in self.data:
                 self.__handleLight(state, lights)
 
+    def findAllLights(self):
+        self.getLightData()
+        if(len(self.data) > 0):
+            lights = []
+
+            for light in self.data:
+                lights.append({
+                    'id' : light,
+                    'swversion' : self.data[light]['swversion'],
+                    'uniqueid' : str(self.data[light]['uniqueid'].split('-')[0]),
+                    'modelid' : self.data[light]['modelid'],
+                    'state' : {
+                        'on' : self.data[light]['state']['on'],
+                        'bri' : self.data[light]['state']['bri']
+                    }
+                })
+
+            return lights
+        else:
+            return 'none lights found!'
+
     def findAllSensors(self):
         self.data = {}
         response = requests.get(self.__bridge_url +'sensors')

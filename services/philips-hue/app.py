@@ -16,26 +16,29 @@ for sys_argv in sys.argv:
 PhilipsHue = philips.Hue(config['philips.hue']['ip'],config['philips.hue']['username'])
 
 if(argv['mode'] == 'light'):
-    light_number = 0
-
-    if('num' in argv):
-        light_number =  int(argv['num'])
-
-    PhilipsHue.getLightData(light_number)
-
-
-    if PhilipsHue.data:
-        if(argv['light'] == 'on'):
-            PhilipsHue.lightOn(True)
-        elif(argv['light'] == 'off'):
-            PhilipsHue.lightOn(False)
-        else:
-            print('State are wrong')
-
-        print(argv)
-
+    if('do' in argv and argv['do'] == 'scan'):
+        lights = PhilipsHue.findAllLights()
+        print(json.dumps(lights))
     else:
-        print('light not found')
+        light_number = 0
+
+        if('num' in argv):
+            light_number =  int(argv['num'])
+
+        PhilipsHue.getLightData(light_number)
+
+        if PhilipsHue.data:
+            if(argv['light'] == 'on'):
+                PhilipsHue.lightOn(True)
+            elif(argv['light'] == 'off'):
+                PhilipsHue.lightOn(False)
+            else:
+                print('State are wrong')
+
+            print(argv)
+
+        else:
+            print('light not found')
 
 elif(argv['mode'] == 'sensor'):
     if(argv['do'] == 'scan'):

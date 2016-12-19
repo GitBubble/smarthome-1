@@ -19,7 +19,7 @@ class Obj {
       ];
     } else {
       $mongo = new MongoDB\Client("mongodb://". MONGODB_IP .":". MONGODB_PORT);
-      $collection = $mongo->smarthome->sensors;
+      $collection = $mongo->smarthome->sensor_log;
 
       $collection->insertOne([
         'uniqueid' => $return->uniqueid,

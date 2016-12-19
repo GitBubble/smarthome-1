@@ -5,10 +5,10 @@ Follow me on youtube and see when I upload new development test videos. https://
 
 ## Supported hardware
 - Philips Hue
- - Bridge
-   - Philip Hue Bridge 2.0
- - Lights
-   - (LCT001) E27 - Philips Hue Extended color light
-   - (LWB006) E27 - Philips Hue Dimmable light
- - Sensors
-   - (SML001) Philips Hue Motion sensor (motion, temperature & light level)
+  - Bridge
+    - Philip Hue Bridge 2.0
+  - Lights
+    - (LCT001) E27 - Philips Hue Extended color light
+    - (LWB006) E27 - Philips Hue Dimmable light
+  - Sensors
+    - (SML001) Philips Hue Motion sensor (motion, temperature & light level)

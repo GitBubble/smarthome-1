@@ -1,4 +1,5 @@
 import requests
+import re
 
 class Hue:
     data = {}
@@ -55,6 +56,9 @@ class Hue:
             else:
                 continue
 
+            if(len(uniqueid.split(':')) != 8):
+                continue
+
             if(uniqueid not in sensors):
                 sensors[uniqueid] = {
                     'uniqueid' : uniqueid,
@@ -95,6 +99,36 @@ class Hue:
         return sensors
 
     def getSensorData(self, num):
-        self.data = {}
         response = requests.get(self.__bridge_url +'sensors/'+ num)
-        return response.json()
+        self.data = {}
+        self.data = response.json()
+
+        uniqueid = str(self.data['uniqueid'].split('-')[0])
+
+        sensor = {
+            'uniqueid' : uniqueid,
+            'modelid' : self.data['modelid'],
+            'swversion' : self.data['swversion'],
+            'type' : None,
+            'state' : {}
+        }
+
+        if(self.data['type'] == 'ZLLPresence'):
+            sensor['type'] = 'presence'
+            sensor['state'] = {
+                'value' : 1 if self.data['state']['presence'] == True else 0
+            }
+
+        elif(self.data['type'] == 'ZLLTemperature'):
+            sensor['type'] = 'temperature'
+            sensor['state'] = {
+                'value' : int(self.data['state']['temperature'])
+            }
+
+        elif(self.data['type'] == 'ZLLLightLevel'):
+            sensor['type'] = 'lightlevel'
+            sensor['state'] = {
+                'value' : int(self.data['state']['lightlevel'])
+            }
+
+        return sensor

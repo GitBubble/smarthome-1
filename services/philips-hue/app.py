@@ -4,7 +4,7 @@ import configparser
 import philips
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('../services/philips-hue/config.ini')
 
 argv = {}
 
@@ -46,10 +46,6 @@ elif(argv['mode'] == 'sensor'):
         print(json.dumps(sensors))
     else:
         print('wrong do command')
-    #print('You try to see all motion sensors!')
-
-
-
 
 else:
     print('you need to pick a Philips Hue mode')

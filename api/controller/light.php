@@ -11,7 +11,21 @@ class Obj {
 
       $return = json_decode(shell_exec('python ../services/philips-hue/app.py mode=light light='. $on .' num='. $num));
       if(count($return) > 0) {
+        $mongo = new MongoDB\Client("mongodb://". MONGODB_IP .":". MONGODB_PORT);
+        $collection = $mongo->smarthome->light_log;
 
+        foreach($return AS $key => $val) {
+          if($val->status == 200) {
+            $collection->insertOne([
+              'uniqueid' => $val->uniqueid,
+              'swversion' => $val->swversion,
+              'state' => $val->state,
+              'num' => $val->num,
+              'modelid' => $val->modelid,
+              'created_at' => new MongoDB\BSON\UTCDateTime(),
+            ]);
+          }
+        }
         return [
           'content' => $return,
           'status' => 200

@@ -69,8 +69,10 @@ while(True):
             sensor_log[str(sensor["uniqueid"])]["temperature"] = sensor['sensors']['temperature']
             sensor_log[str(sensor["uniqueid"])]["presence"] = sensor['sensors']['presence']
 
-        print('--- scan all sensors and update for next run --')
-        requests.post(config['restapi']['url'] +'sensors/scan', data=post_data)
+        print('---')
+        
+    print('--- scan all sensors and update for next run --')
+    requests.post(config['restapi']['url'] +'sensors/scan', data=post_data)
 
     loop_count += 1
 

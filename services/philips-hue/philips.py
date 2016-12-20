@@ -7,6 +7,7 @@ class Hue:
     __bridge_url = ''
     __light_num = 0
     __hue_bri_max = 254
+    light_status = []
 
     def __init__(self, bridge, username):
         self.__bridge_url = 'http://'+ bridge +'/api/'+ username +'/'
@@ -23,20 +24,85 @@ class Hue:
         self.data = response.json()
 
     def __handleLight(self,state, light_num):
+        light_data = self.data
+
+        if(str(light_num) in self.data):
+            light_data = self.data[light_num]
+
         if(state == True):
             if((str(light_num) in self.data and self.data[light_num]['state']['on'] == True) or ('state' in self.data and self.data['state']['on'] == True) ):
-                print('Light: '+ str(light_num) +' is on')
+                self.light_status.append({
+                    'status' : '208',
+                    'num' : light_num,
+                    'modelid' : light_data['modelid'],
+                    'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                    'swversion' : light_data['swversion'],
+                    'state' : {
+                        'on' : True
+                    }
+                })
+
             else:
                 r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/state', json={"on": True, "bri": int(self.__hue_bri_max)})
-                print(r.status_code)
+                if(r.status_code == 200):
+                    self.light_status.append({
+                        'status' : '200',
+                        'num' : light_num,
+                        'modelid' : light_data['modelid'],
+                        'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                        'swversion' : light_data['swversion'],
+                        'state' : {
+                            'on' : True
+                        }
+                    })
+
+                else:
+                    self.light_status.append({
+                        'status' : '404',
+                        'num' : light_num,
+                        'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                        'swversion' : light_data['swversion'],
+                        'error' : 'Error!'
+                    })
+
         elif(state == False):
             if((str(light_num) in self.data and self.data[light_num]['state']['on'] == False) or ('state' in self.data and self.data['state']['on'] == False) ):
-                print('Light: '+ str(light_num) +' is off')
+                self.light_status.append({
+                    'status' : '208',
+                    'num' : light_num,
+                    'modelid' : light_data['modelid'],
+                    'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                    'swversion' : light_data['swversion'],
+                    'state' : {
+                        'on' : False
+                    }
+                })
             else:
                 r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/state', json={"on": False})
-                print(r.status_code)
+                if(r.status_code == 200):
+                    self.light_status.append({
+                        'status' : '200',
+                        'num' : light_num,
+                        'modelid' : light_data['modelid'],
+                        'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                        'swversion' : light_data['swversion'],
+                        'state' : {
+                            'on' : False
+                        }
+                    })
+
+                else:
+                    self.light_status.append({
+                        'status' : '404',
+                        'num' : light_num,
+                        'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                        'swversion' : light_data['swversion'],
+                        'error' : 'Error!'
+                    })
 
     def lightOn(self,state):
+        self.light_status = []
+
         if(self.__light_num > 0):
             self.__handleLight(state, self.__light_num)
         else:

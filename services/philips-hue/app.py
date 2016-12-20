@@ -19,6 +19,7 @@ if(argv['mode'] == 'light'):
     if('do' in argv and argv['do'] == 'scan'):
         lights = PhilipsHue.findAllLights()
         print(json.dumps(lights))
+
     else:
         light_number = 0
 
@@ -30,12 +31,12 @@ if(argv['mode'] == 'light'):
         if PhilipsHue.data:
             if(argv['light'] == 'on'):
                 PhilipsHue.lightOn(True)
+                print(json.dumps(PhilipsHue.light_status))
             elif(argv['light'] == 'off'):
                 PhilipsHue.lightOn(False)
+                print(json.dumps(PhilipsHue.light_status))
             else:
                 print('State are wrong')
-
-            print(argv)
 
         else:
             print('light not found')
@@ -44,9 +45,11 @@ elif(argv['mode'] == 'sensor'):
     if(argv['do'] == 'scan'):
         sensors = PhilipsHue.findAllSensors()
         print(json.dumps(sensors))
+
     elif (argv['do'] == 'get'):
         sensors = PhilipsHue.getSensorData(argv['num'])
         print(json.dumps(sensors))
+
     else:
         print('wrong do command')
 

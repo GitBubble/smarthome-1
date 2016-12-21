@@ -3,6 +3,11 @@ Personal smarthome software, using to control my own home, the software are free
 
 Follow me on youtube and see when I upload new development test videos. https://www.youtube.com/playlist?list=PLLhEJK7fQIxBMek-wYmvs82PSiOWKfe4L
 
+## Love this project?
+If you love this project and you want to make a donations you are welcom to sending bits to my bitcoin wallet addresse, if you just love this project and don't want to donate then i hope you will make this project as a star, thanks for all your support.
+
+BTC: 1KLeksUbR3fP2DH2rY9RMiiqGwcFca8vPB
+
 ## Supported hardware
 - Philips Hue
   - Bridge

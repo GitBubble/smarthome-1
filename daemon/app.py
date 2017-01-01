@@ -72,7 +72,9 @@ while(True):
         print('---')
 
     print('--- scan all sensors and update for next run --')
+
     requests.get(config['restapi']['url'] +'sensors/scan')
+    requests.get(config['restapi']['url'] +'lights/scan')
 
     loop_count += 1
 

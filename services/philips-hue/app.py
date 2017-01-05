@@ -39,7 +39,10 @@ if(argv['mode'] == 'light'):
                 print('State are wrong')
 
         else:
-            print('light not found')
+            if(PhilipsHue.bridge_online == False):
+                print('Philips Hue Bridge is offline')
+            else:
+                print('Philip Hue found no lights')
 
 elif(argv['mode'] == 'sensor'):
     if(argv['do'] == 'scan'):

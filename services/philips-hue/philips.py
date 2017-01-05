@@ -1,5 +1,6 @@
 import requests
 import re
+import sys
 
 class Hue:
     data = {}
@@ -7,6 +8,7 @@ class Hue:
     __bridge_url = ''
     __light_num = 0
     __hue_bri_max = 254
+    bridge_online = None
     light_status = []
 
     def __init__(self, bridge, username):
@@ -16,12 +18,18 @@ class Hue:
         self.data = {}
         self.__light_num = int(num)
 
-        if(self.__light_num > 0):
-            response = requests.get(self.__bridge_url +'lights/'+ str(self.__light_num))
-        else:
-            response = requests.get(self.__bridge_url +'lights')
+        try:
+            if(self.__light_num > 0):
+                response = requests.get(self.__bridge_url +'lights/'+ str(self.__light_num))
+            else:
+                response = requests.get(self.__bridge_url +'lights')
 
-        self.data = response.json()
+            self.bridge_online = True
+            self.data = response.json()
+
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            self.bridge_online = False
+
 
     def __handleLight(self,state, light_num):
         light_data = self.data
@@ -128,7 +136,16 @@ class Hue:
 
             return lights
         else:
-            return 'none lights found!'
+            if(self.bridge_online == False):
+                return {
+                    'status' : 500,
+                    'msg' : 'Philips Hue Bridge is offline'
+                }
+            else:
+                return {
+                    'status' : 500,
+                    'msg' : 'Philip Hue found no lights'
+                }
 
     def findAllSensors(self):
         self.data = {}

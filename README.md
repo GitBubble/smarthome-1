@@ -19,3 +19,5 @@ BTC: 1KLeksUbR3fP2DH2rY9RMiiqGwcFca8vPB
     - (LWB006) E27 - Philips Hue Dimmable light
   - Sensors
     - (SML001) Philips Hue Motion sensor (motion, temperature & light level)
+- Sonos
+  - Speaker

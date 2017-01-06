@@ -16,3 +16,8 @@ if(argv['mode'] == 'speaker'):
         sonos_data = Sonos.getAll()
 
         print(json.dumps(sonos_data))
+
+# speaker.player_name = 'My own speaker'
+# speaker.mute = True
+
+# play() / pause()

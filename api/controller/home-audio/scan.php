@@ -22,6 +22,7 @@ class Obj {
               'device' => [
                 'brand' => 'Sonos',
                 'modelid' => $val->model_name,
+                'icon' => 'http://'. $val->ip_address .':1400'. $val->icon,
                 'software_version' => $val->software_version,
                 'hardware_version' => $val->hardware_version,
               ],
@@ -40,10 +41,11 @@ class Obj {
         } else {
           $collection->insertOne([
             'uniqueid' => $val->uniqueid,
-            'name' => $val->name,
+            'title' => $val->name,
             'device' => [
               'brand' => 'Sonos',
               'modelid' => $val->model_name,
+              'icon' => 'http://'. $val->ip_address .':1400'. $val->icon,
               'software_version' => $val->software_version,
               'hardware_version' => $val->hardware_version,
             ],

@@ -21,6 +21,7 @@ class Speaker:
                 'software_version' : speaker_info['software_version'],
                 'hardware_version' : speaker_info['hardware_version'],
                 'display_version' : speaker_info['display_version'],
+                'icon' : speaker_info['player_icon'],
                 'uniqueid' : speaker.uid,
                 'mute' : speaker.mute,
                 'volume' : speaker.volume,

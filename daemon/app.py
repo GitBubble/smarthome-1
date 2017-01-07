@@ -1,4 +1,5 @@
 import time
+import threading
 import requests
 import configparser
 from pymongo import MongoClient
@@ -11,6 +12,55 @@ db = client.smarthome
 
 loop_count = 0
 sensor_log = {}
+
+""" Handler to update all devices in smart home system in the background """
+class Threading(object):
+    def __init__(self, interval=1):
+        self.interval = interval
+
+        print '***'
+
+        print 'Prepare sensors in background task!'
+        thread = threading.Thread(target=self.sensors, args=())
+        thread.daemon = True
+        thread.start()
+        print 'Sensors start background'
+
+        print '***'
+
+        print 'Prepare lights in background task!'
+        thread = threading.Thread(target=self.lights, args=())
+        thread.daemon = True
+        thread.start()
+        print 'Sensors lights background'
+
+        print '***'
+
+        print 'Prepare home audios in background task!'
+        thread = threading.Thread(target=self.home_audios, args=())
+        thread.daemon = True
+        thread.start()
+        print 'Sensors home audios background'
+
+        print '***'
+
+    def sensors(self):
+        while True:
+            requests.get(config['restapi']['url'] +'sensors/scan')
+            time.sleep(self.interval)
+
+    def lights(self):
+        while True:
+            requests.get(config['restapi']['url'] +'lights/scan')
+            time.sleep(self.interval)
+
+    def home_audios(self):
+        while True:
+            requests.get(config['restapi']['url'] +'home-audio/scan')
+            time.sleep(self.interval)
+
+threads = Threading()
+
 
 while(True):
     collection = db.sensors
@@ -72,9 +122,6 @@ while(True):
         print('---')
 
     print('--- scan all sensors and update for next run --')
-
-    requests.get(config['restapi']['url'] +'sensors/scan')
-    requests.get(config['restapi']['url'] +'lights/scan')
 
     loop_count += 1
 

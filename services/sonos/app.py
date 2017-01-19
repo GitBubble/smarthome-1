@@ -17,7 +17,12 @@ if(argv['mode'] == 'speaker'):
 
         print(json.dumps(sonos_data))
 
-# speaker.player_name = 'My own speaker'
-# speaker.mute = True
+    elif('do' in argv and argv['do'] == 'mute'):
+        Sonos = sonos.Speaker()
+        Sonos.ip = argv['ip']
+        sonos_data = Sonos.mute()
 
+        print(json.dumps(sonos_data))
+
+# speaker.player_name = 'My own speaker'
 # play() / pause()

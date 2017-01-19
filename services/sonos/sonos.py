@@ -5,6 +5,7 @@ import sys
 
 class Speaker:
     data = {}
+    ip = None
 
     def getAll(self):
         speakers = soco.discover()
@@ -29,5 +30,44 @@ class Speaker:
                 'serial_number' : speaker_info['serial_number'],
                 'model_name' : speaker_info['model_name'],
             })
+
+        return speaker_data
+
+    def mute(self):
+        speaker_data = {}
+
+        if (self.ip != None):
+            speakers = soco.discover()
+            speaker_exists = False
+
+            for speaker in speakers:
+                if(self.ip == speaker.ip_address):
+                    speaker_exists = True
+
+            if(speaker_exists == True):
+                speaker = soco.SoCo(self.ip)
+
+                if(speaker.mute == True):
+                    mute = False
+                else:
+                    mute = True
+
+                speaker.mute = mute
+                speaker_data = {
+                    'status' : 200,
+                    'mute' : mute,
+                    'uniqueid' : speaker.uid
+                }
+            else:
+                speaker_data = {
+                    'status' : 503,
+                    'msg' : 'Sonos speaker are unavailable.'
+                }
+
+        else:
+            speaker_data = {
+                'status' : 404,
+                'msg' : 'You need to defined the ip to the speaker you will connect to.'
+            }
 
         return speaker_data

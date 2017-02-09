@@ -24,5 +24,13 @@ if(argv['mode'] == 'speaker'):
 
         print(json.dumps(sonos_data))
 
+    elif('do' in argv and argv['do'] == 'power'):
+        Sonos = sonos.Speaker()
+        Sonos.ip = argv['ip']
+        sonos_data = Sonos.power()
+
+        print(json.dumps(sonos_data))
+
+
 # speaker.player_name = 'My own speaker'
 # play() / pause()

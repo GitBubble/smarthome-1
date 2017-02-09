@@ -71,3 +71,31 @@ class Speaker:
             }
 
         return speaker_data
+
+    def power(self):
+        speaker_data = {}
+
+        if (self.ip != None):
+            speakers = soco.discover()
+            speaker_exists = False
+
+            for speaker in speakers:
+                if(self.ip == speaker.ip_address):
+                    speaker_exists = True
+
+            if(speaker_exists == True):
+                speaker = soco.SoCo(self.ip)
+
+            else:
+                speaker_data = {
+                    'status' : 503,
+                    'msg' : 'Sonos speaker are unavailable.'
+                }
+            
+        else:
+            speaker_data = {
+                'status' : 404,
+                'msg' : 'You need to defined the ip to the speaker you will connect to.'
+            }
+
+        return speaker_data

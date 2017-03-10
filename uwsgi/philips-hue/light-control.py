@@ -8,6 +8,12 @@ config.read(dir_path +'/config.ini')
 
 t = Terminal()
 
+class ObjResourceSensorScan:
+    def on_get(self, req, resp):
+        PhilipsHue = libs.philips.Hue(config['philips.hue']['ip'],config['philips.hue']['username'])
+        sensors = PhilipsHue.findAllSensors()
+        resp.body = json.dumps(sensors)
+
 class ObjResourceLightScan:
     def on_get(self, req, resp):
         PhilipsHue = libs.philips.Hue(config['philips.hue']['ip'],config['philips.hue']['username'])
@@ -72,6 +78,8 @@ class ObjResourceLight:
                     }
                     print t.yellow('Philip Hue found no lights')
 
+
 api = falcon.API()
+api.add_route('/philips-hue/sensor-scan', ObjResourceSensorScan())
 api.add_route('/philips-hue/light-scan', ObjResourceLightScan())
 api.add_route('/philips-hue/light', ObjResourceLight())

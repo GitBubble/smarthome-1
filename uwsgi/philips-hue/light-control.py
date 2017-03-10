@@ -14,6 +14,26 @@ class ObjResourceSensorScan:
         sensors = PhilipsHue.findAllSensors()
         resp.body = json.dumps(sensors)
 
+class ObjResourceSensor:
+    def on_post(self, req, resp):
+        json_input_found = False
+
+        try:
+            json_data = json.loads(req.stream.read())
+            json_input_found = True
+            print t.green('Json data from client its validated')
+        except:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+                'status' : '404',
+                'message' : 'Your json input data is not validated.'
+            })
+
+        if(json_input_found == True):
+            PhilipsHue = libs.philips.Hue(config['philips.hue']['ip'],config['philips.hue']['username'])
+            sensors = PhilipsHue.getSensorData(str(json_data['num']))
+            resp.body = json.dumps(sensors)
+
 class ObjResourceLightScan:
     def on_get(self, req, resp):
         PhilipsHue = libs.philips.Hue(config['philips.hue']['ip'],config['philips.hue']['username'])
@@ -81,5 +101,6 @@ class ObjResourceLight:
 
 api = falcon.API()
 api.add_route('/philips-hue/sensor-scan', ObjResourceSensorScan())
+api.add_route('/philips-hue/sensor', ObjResourceSensor())
 api.add_route('/philips-hue/light-scan', ObjResourceLightScan())
 api.add_route('/philips-hue/light', ObjResourceLight())

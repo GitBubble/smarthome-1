@@ -36,22 +36,22 @@ class Threading(object):
 
         print '***'
 
-        print 'Prepare home audios in background task!'
-        thread = threading.Thread(target=self.home_audios, args=())
-        thread.daemon = True
-        thread.start()
-        print 'Sensors home audios background'
+        # print 'Prepare home audios in background task!'
+        # thread = threading.Thread(target=self.home_audios, args=())
+        # thread.daemon = True
+        # thread.start()
+        # print 'Sensors home audios background'
 
         print '***'
 
     def sensors(self):
         while True:
-            requests.get(config['restapi']['url'] +'sensors/scan')
+            requests.get(config['restapi']['url'] +'philips-hue/sensor-scan')
             time.sleep(self.interval)
 
     def lights(self):
         while True:
-            requests.get(config['restapi']['url'] +'lights/scan')
+            requests.get(config['restapi']['url'] +'philips-hue/light-scan')
             time.sleep(self.interval)
 
     def home_audios(self):

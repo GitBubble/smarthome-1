@@ -46,17 +46,17 @@ class Threading(object):
 
     def sensors(self):
         while True:
-            requests.get(config['restapi']['url'] +'philips-hue/sensor-scan')
+            requests.get(config['restapi']['philips_hue'] +'philips-hue/sensor-scan')
             time.sleep(self.interval)
 
     def lights(self):
         while True:
-            requests.get(config['restapi']['url'] +'philips-hue/light-scan')
+            requests.get(config['restapi']['philips_hue'] +'philips-hue/light-scan')
             time.sleep(self.interval)
 
     def home_audios(self):
         while True:
-            requests.get(config['restapi']['url'] +'home-audio/scan')
+            requests.get(config['restapi']['sonos'] +'home-audio/scan')
             time.sleep(self.interval)
 
 threads = Threading()

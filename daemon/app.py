@@ -1,8 +1,6 @@
-import time
-import threading
-import requests
-import configparser
+import sys, time, threading, requests, configparser, json
 from pymongo import MongoClient
+import libs.philips
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -46,17 +44,20 @@ class Threading(object):
 
     def sensors(self):
         while True:
-            requests.get(config['restapi']['philips_hue'] +'philips-hue/sensor-scan')
+            r = requests.get(config['restapi']['philips_hue'] +'philips-hue/sensor-scan')
+            philips_hue = libs.philips.Hue(r.json(), config)
+            philips_hue.sensors()
+
             time.sleep(self.interval)
 
     def lights(self):
         while True:
-            requests.get(config['restapi']['philips_hue'] +'philips-hue/light-scan')
+            r = requests.get(config['restapi']['philips_hue'] +'philips-hue/light-scan')
             time.sleep(self.interval)
 
     def home_audios(self):
         while True:
-            requests.get(config['restapi']['sonos'] +'home-audio/scan')
+            r = requests.get(config['restapi']['sonos'] +'home-audio/scan')
             time.sleep(self.interval)
 
 threads = Threading()
@@ -95,23 +96,44 @@ while(True):
         if(str(sensor_log[sensor['uniqueid']]['lightlevel']['value']) != str(sensor['sensors']['lightlevel']['value'])):
             have_changes = 1
             post_data = {
-                'num' : sensor['sensors']['lightlevel']['id']
+                'uniqueid' : sensor['uniqueid'],
+                'num' : sensor['sensors']['lightlevel']['id'],
+                'componet' : 'sensor',
+                'state' : {
+                    'type' : 'lightlevel',
+                    'value' : int(sensor['sensors']['lightlevel']['value'])
+                }
             }
-            requests.post(config['restapi']['url'] +'sensors/log', data=post_data)
+
+            requests.put(config['restapi']['logging'] +'logging', data=json.dumps(post_data))
 
         if(str(sensor_log[sensor['uniqueid']]['temperature']['value']) != str(sensor['sensors']['temperature']['value'])):
             have_changes = 1
             post_data = {
-                'num' : sensor['sensors']['temperature']['id']
+                'uniqueid' : sensor['uniqueid'],
+                'num' : sensor['sensors']['temperature']['id'],
+                'componet' : 'sensor',
+                'state' : {
+                    'type' : 'temperature',
+                    'value' : int(sensor['sensors']['temperature']['value'])
+                }
             }
-            requests.post(config['restapi']['url'] +'sensors/log', data=post_data)
+
+            requests.put(config['restapi']['logging'] +'logging', data=json.dumps(post_data))
 
         if(str(sensor_log[sensor['uniqueid']]['presence']['value']) != str(sensor['sensors']['presence']['value'])):
             have_changes = 1
             post_data = {
-                'num' : sensor['sensors']['presence']['id']
+                'uniqueid' : sensor['uniqueid'],
+                'num' : sensor['sensors']['presence']['id'],
+                'componet' : 'sensor',
+                'state' : {
+                    'type' : 'presence',
+                    'value' : bool(sensor['sensors']['presence']['value'])
+                }
             }
-            requests.post(config['restapi']['url'] +'sensors/log', data=post_data)
+
+            requests.put(config['restapi']['logging'] +'logging', data=json.dumps(post_data))
 
 
         if(have_changes == 1):

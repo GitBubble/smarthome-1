@@ -18,11 +18,11 @@ class Threading(object):
 
         print '***'
 
-        print 'Prepare sensors in background task!'
-        thread = threading.Thread(target=self.sensors, args=())
-        thread.daemon = True
-        thread.start()
-        print 'Sensors start background'
+        # print 'Prepare sensors in background task!'
+        # thread = threading.Thread(target=self.sensors, args=())
+        # thread.daemon = True
+        # thread.start()
+        # print 'Sensors start background'
 
         print '***'
 
@@ -53,6 +53,9 @@ class Threading(object):
     def lights(self):
         while True:
             r = requests.get(config['restapi']['philips_hue'] +'philips-hue/light-scan')
+            philips_hue = libs.philips.Hue(r.json(), config)
+            philips_hue.lights()
+
             time.sleep(self.interval)
 
     def home_audios(self):

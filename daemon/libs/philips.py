@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from blessings import Terminal
-import time
+import time, sys
 
 t = Terminal()
 
@@ -52,3 +52,47 @@ class Hue:
                 print t.blue('[INSERT] uniqueid: '+ str(key) +' | time: '+ now_date)
 
         client.close()
+
+    def lights(self):
+        client = MongoClient(self.__config['mongodb']['ip'], int(self.__config['mongodb']['port']))
+        db = client.smarthome
+
+        for value in self.__json_data:
+            now_date = time.strftime("%Y-%m-%d %H:%M:%S")
+
+            cursor = db.lights.find_one({"uniqueid": str(value['uniqueid'])})
+
+            print value
+
+            if(cursor is not None):
+                resualt = db.lights.update_one({
+                    'uniqueid' : str(value['uniqueid']),
+                },{
+                    '$set' : {
+                        'id' : str(value['id']),
+                        'swversion' : str(value['swversion']),
+                        'state' : {
+                            'on' : bool(value['state']['on']),
+                            'bri' : int(value['state']['bri'])
+                        },
+                        'updated_at' : now_date
+                    }
+                })
+
+                print t.blue('[UPDATE] uniqueid: '+ str(value['uniqueid']) +' | time: '+ now_date)
+
+            else:
+                resualt = db.lights.insert_one({
+                    'uniqueid' : str(value['uniqueid']),
+                    'modelid' : str(value['modelid']),
+                    'swversion' : str(value['swversion']),
+                    'id' : str(value['id']),
+                    'state' : {
+                        'on' : bool(value['state']['on']),
+                        'bri' : int(value['state']['bri'])
+                    },
+                    'updated_at' : now_date,
+                    'created_at' : now_date
+                })
+
+                print t.blue('[INSERT] uniqueid: '+ str(value['uniqueid']) +' | time: '+ now_date)

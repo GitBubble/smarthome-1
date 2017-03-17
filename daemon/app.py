@@ -18,11 +18,11 @@ class Threading(object):
 
         print '***'
 
-        # print 'Prepare sensors in background task!'
-        # thread = threading.Thread(target=self.sensors, args=())
-        # thread.daemon = True
-        # thread.start()
-        # print 'Sensors start background'
+        print 'Prepare sensors in background task!'
+        thread = threading.Thread(target=self.sensors, args=())
+        thread.daemon = True
+        thread.start()
+        print 'Sensors start background'
 
         print '***'
 

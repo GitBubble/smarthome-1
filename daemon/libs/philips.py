@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from blessings import Terminal
 import time, sys
+from datetime import datetime
 
 t = Terminal()
 
@@ -17,7 +18,7 @@ class Hue:
         db = client.smarthome
 
         for key, value in self.__json_data.items():
-            now_date = time.strftime("%Y-%m-%d %H:%M:%S")
+            now_date = datetime.now()
 
             sensors = {}
             for sensor in value['sensors']:
@@ -38,7 +39,7 @@ class Hue:
                     }
                 })
 
-                print t.blue('[UPDATE] uniqueid: '+ str(key) +' | time: '+ now_date)
+                print t.blue('[UPDATE] uniqueid: '+ str(key) +' | time: '+ now_date.strftime("%Y-%m-%d %H:%M:%S"))
 
             else:
                 resualt = db.sensors.insert_one({
@@ -49,7 +50,7 @@ class Hue:
                     'created_at' : now_date
                 })
 
-                print t.blue('[INSERT] uniqueid: '+ str(key) +' | time: '+ now_date)
+                print t.blue('[INSERT] uniqueid: '+ str(key) +' | time: '+ now_date.strftime("%Y-%m-%d %H:%M:%S"))
 
         client.close()
 
@@ -58,7 +59,7 @@ class Hue:
         db = client.smarthome
 
         for value in self.__json_data:
-            now_date = time.strftime("%Y-%m-%d %H:%M:%S")
+            now_date = datetime.now()
 
             cursor = db.lights.find_one({"uniqueid": str(value['uniqueid'])})
 
@@ -79,7 +80,7 @@ class Hue:
                     }
                 })
 
-                print t.blue('[UPDATE] uniqueid: '+ str(value['uniqueid']) +' | time: '+ now_date)
+                print t.blue('[UPDATE] uniqueid: '+ str(value['uniqueid']) +' | time: '+ now_date.strftime("%Y-%m-%d %H:%M:%S"))
 
             else:
                 resualt = db.lights.insert_one({
@@ -95,4 +96,4 @@ class Hue:
                     'created_at' : now_date
                 })
 
-                print t.blue('[INSERT] uniqueid: '+ str(value['uniqueid']) +' | time: '+ now_date)
+                print t.blue('[INSERT] uniqueid: '+ str(value['uniqueid']) +' | time: '+ now_date.strftime("%Y-%m-%d %H:%M:%S"))

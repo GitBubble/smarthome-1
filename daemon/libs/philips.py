@@ -65,16 +65,33 @@ class Hue:
 
             print value
 
+            hue_bri = int(value['state']['bri'])
+            hue_on = True if bool(value['state']['on']) == True and hue_bri > 0 else False
+
+
+
             if(cursor is not None):
                 resualt = db.lights.update_one({
                     'uniqueid' : str(value['uniqueid']),
                 },{
                     '$set' : {
-                        'id' : str(value['id']),
-                        'swversion' : str(value['swversion']),
+                        'id' : value['id'],
+                        'swversion' : value['swversion'],
+                        'name' : value['name'].encode('utf-8'),
                         'state' : {
-                            'on' : bool(value['state']['on']),
-                            'bri' : int(value['state']['bri'])
+                            'on' : value['state']['on'],
+                            'bri' : value['state']['bri'],
+                            'hue' : value['state']['hue'],
+                            'ct' : value['state']['ct'],
+                            'sat' : value['state']['sat'],
+                            'colormode' : value['state']['colormode'],
+                            'effect' : value['state']['effect'],
+                            'alert' : value['state']['alert'],
+                            'reachable' : value['state']['reachable'],
+                            'xy' : {
+                                'x' : value['state']['xy']['x'],
+                                'y' : value['state']['xy']['y']
+                            }
                         },
                         'updated_at' : now_date
                     }
@@ -84,13 +101,27 @@ class Hue:
 
             else:
                 resualt = db.lights.insert_one({
-                    'uniqueid' : str(value['uniqueid']),
-                    'modelid' : str(value['modelid']),
-                    'swversion' : str(value['swversion']),
-                    'id' : str(value['id']),
+                    'id' : value['id'],
+                    'swversion' : value['swversion'],
+                    'uniqueid' : value['uniqueid'],
+                    'modelid' : value['modelid'],
+                    'manufacturer' : value['manufacturer'],
+                    'name' : value['name'].encode('utf-8'),
+                    'type' : value['type'],
                     'state' : {
-                        'on' : bool(value['state']['on']),
-                        'bri' : int(value['state']['bri'])
+                        'on' : value['state']['on'],
+                        'bri' : value['state']['bri'],
+                        'hue' : value['state']['hue'],
+                        'ct' : value['state']['ct'],
+                        'sat' : value['state']['sat'],
+                        'colormode' : value['state']['colormode'],
+                        'effect' : value['state']['effect'],
+                        'alert' : value['state']['alert'],
+                        'reachable' : value['state']['reachable'],
+                        'xy' : {
+                            'x' : value['state']['xy']['x'],
+                            'y' : value['state']['xy']['y']
+                        }
                     },
                     'updated_at' : now_date,
                     'created_at' : now_date

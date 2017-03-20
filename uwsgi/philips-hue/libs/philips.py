@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys, requests, re
 
 class Hue:
@@ -117,18 +120,33 @@ class Hue:
 
     def findAllLights(self):
         self.getLightData()
+
         if(len(self.data) > 0):
             lights = []
 
             for light in self.data:
                 lights.append({
-                    'id' : light,
+                    'id' : str(light),
                     'swversion' : self.data[light]['swversion'],
                     'uniqueid' : str(self.data[light]['uniqueid'].split('-')[0]),
                     'modelid' : self.data[light]['modelid'],
+                    'manufacturer' : str(self.data[light]['manufacturername']),
+                    'name' : str(self.data[light]['name'].encode('utf-8')),
+                    'type' : str(self.data[light]['type']),
                     'state' : {
-                        'on' : self.data[light]['state']['on'],
-                        'bri' : self.data[light]['state']['bri']
+                        'on' : bool(self.data[light]['state']['on']),
+                        'bri' : int(self.data[light]['state']['bri']),
+                        'hue' : int(self.data[light]['state']['hue']) if 'hue' in self.data[light]['state'] else None,
+                        'ct' : int(self.data[light]['state']['ct']) if 'ct' in self.data[light]['state'] else None,
+                        'sat' : int(self.data[light]['state']['sat']) if 'sat' in self.data[light]['state'] else None,
+                        'colormode' : str(self.data[light]['state']['colormode']) if 'colormode' in self.data[light]['state'] else None,
+                        'effect' : str(self.data[light]['state']['effect']) if 'effect' in self.data[light]['state'] else None,
+                        'alert' : str(self.data[light]['state']['alert']),
+                        'reachable' : bool(self.data[light]['state']['reachable']),
+                        'xy' : {
+                            'x' : float(self.data[light]['state']['xy'][0]) if 'xy' in self.data[light]['state'] else None,
+                            'y' : float(self.data[light]['state']['xy'][1]) if 'xy' in self.data[light]['state'] else None
+                        }
                     }
                 })
 

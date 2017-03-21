@@ -83,6 +83,13 @@ class ObjResourceLight:
                         print t.red('Wrong value for params[on] : '+ str(json_data['on']))
 
                     resp.body = json.dumps(PhilipsHue.light_status)
+
+                if 'name' in json_data.keys():
+                    PhilipsHue.lightName(json_data['name'])
+
+                    resp.body = json.dumps(PhilipsHue.light_status)
+
+                    print t.blue('Light name changed to: '+ json_data['name'])
             else:
                 if(PhilipsHue.bridge_online == False):
                     resp.body = {

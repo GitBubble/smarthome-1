@@ -32,30 +32,17 @@ class Hue:
             self.bridge_online = False
 
 
-    def __handleLight(self,state, light_num):
+    def __handleLight(self,state,light_num,method):
         light_data = self.data
 
         if(str(light_num) in self.data):
             light_data = self.data[light_num]
 
-        if(state == True):
-            if((str(light_num) in self.data and self.data[light_num]['state']['on'] == True) or ('state' in self.data and self.data['state']['on'] == True) ):
-                self.light_status.append({
-                    'status' : '208',
-                    'num' : light_num,
-                    'modelid' : light_data['modelid'],
-                    'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
-                    'swversion' : light_data['swversion'],
-                    'state' : {
-                        'on' : True
-                    }
-                })
-
-            else:
-                r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/state', json={"on": True, "bri": int(self.__hue_bri_max)})
-                if(r.status_code == 200):
+        if(method == 'on'):
+            if(state == True):
+                if((str(light_num) in self.data and self.data[light_num]['state']['on'] == True) or ('state' in self.data and self.data['state']['on'] == True) ):
                     self.light_status.append({
-                        'status' : '200',
+                        'status' : '208',
                         'num' : light_num,
                         'modelid' : light_data['modelid'],
                         'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
@@ -66,31 +53,32 @@ class Hue:
                     })
 
                 else:
-                    self.light_status.append({
-                        'status' : '404',
-                        'num' : light_num,
-                        'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
-                        'swversion' : light_data['swversion'],
-                        'error' : 'Error!'
-                    })
+                    r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/state', json={"on": True, "bri": int(self.__hue_bri_max)})
+                    if(r.status_code == 200):
+                        self.light_status.append({
+                            'status' : '200',
+                            'num' : light_num,
+                            'modelid' : light_data['modelid'],
+                            'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                            'swversion' : light_data['swversion'],
+                            'state' : {
+                                'on' : True
+                            }
+                        })
 
-        elif(state == False):
-            if((str(light_num) in self.data and self.data[light_num]['state']['on'] == False) or ('state' in self.data and self.data['state']['on'] == False) ):
-                self.light_status.append({
-                    'status' : '208',
-                    'num' : light_num,
-                    'modelid' : light_data['modelid'],
-                    'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
-                    'swversion' : light_data['swversion'],
-                    'state' : {
-                        'on' : False
-                    }
-                })
-            else:
-                r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/state', json={"on": False})
-                if(r.status_code == 200):
+                    else:
+                        self.light_status.append({
+                            'status' : '404',
+                            'num' : light_num,
+                            'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                            'swversion' : light_data['swversion'],
+                            'error' : 'Error!'
+                        })
+
+            elif(state == False):
+                if((str(light_num) in self.data and self.data[light_num]['state']['on'] == False) or ('state' in self.data and self.data['state']['on'] == False) ):
                     self.light_status.append({
-                        'status' : '200',
+                        'status' : '208',
                         'num' : light_num,
                         'modelid' : light_data['modelid'],
                         'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
@@ -99,24 +87,59 @@ class Hue:
                             'on' : False
                         }
                     })
-
                 else:
-                    self.light_status.append({
-                        'status' : '404',
-                        'num' : light_num,
-                        'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
-                        'swversion' : light_data['swversion'],
-                        'error' : 'Error!'
-                    })
+                    r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/state', json={"on": False})
+                    if(r.status_code == 200):
+                        self.light_status.append({
+                            'status' : '200',
+                            'num' : light_num,
+                            'modelid' : light_data['modelid'],
+                            'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                            'swversion' : light_data['swversion'],
+                            'state' : {
+                                'on' : False
+                            }
+                        })
+
+                    else:
+                        self.light_status.append({
+                            'status' : '404',
+                            'num' : light_num,
+                            'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                            'swversion' : light_data['swversion'],
+                            'error' : 'Error!'
+                        })
+
+        elif(method == 'name'):
+            r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/name', json={"name": state})
+            print r.text
+            if(r.status_code == 200):
+                self.light_status.append({
+                    'status' : '200',
+                    'num' : light_num,
+                    'modelid' : light_data['modelid'],
+                    'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                    'swversion' : light_data['swversion']
+                })
+            else:
+                self.light_status.append({
+                    'status' : '404',
+                    'num' : light_num,
+                    'uniqueid' : str(light_data['uniqueid'].split('-')[0]),
+                    'swversion' : light_data['swversion']
+                })
 
     def lightOn(self,state):
         self.light_status = []
 
         if(self.__light_num > 0):
-            self.__handleLight(state, self.__light_num)
+            self.__handleLight(state, self.__light_num, 'on')
         else:
             for lights in self.data:
-                self.__handleLight(state, lights)
+                self.__handleLight(state, lights, 'on')
+
+    def lightName(self, name):
+        self.__handleLight(name, self.__light_num, 'name')
 
     def findAllLights(self):
         self.getLightData()

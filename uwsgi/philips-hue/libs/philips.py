@@ -112,7 +112,6 @@ class Hue:
 
         elif(method == 'name'):
             r = requests.put(self.__bridge_url +'lights/'+ str(light_num) +'/name', json={"name": state})
-            print r.text
             if(r.status_code == 200):
                 self.light_status.append({
                     'status' : '200',

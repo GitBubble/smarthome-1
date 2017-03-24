@@ -1,9 +1,11 @@
-import sys, time, threading, requests, configparser, json
+import os, sys, time, threading, requests, configparser, json
 from pymongo import MongoClient
 import libs.philips
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(dir_path +'/config.ini')
 
 client = MongoClient(config['mongodb']['ip'], int(config['mongodb']['port']))
 db = client.smarthome

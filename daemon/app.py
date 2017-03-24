@@ -58,12 +58,12 @@ class Threading(object):
             philips_hue = libs.philips.Hue(r.json(), config)
             philips_hue.lights()
 
-            time.sleep(self.interval)
+            time.sleep((self.interval * 5))
 
     def home_audios(self):
         while True:
             r = requests.get(config['restapi']['sonos'] +'home-audio/scan')
-            time.sleep(self.interval)
+            time.sleep((self.interval * 60 * 5))
 
 threads = Threading()
 

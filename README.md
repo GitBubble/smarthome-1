@@ -8,7 +8,11 @@ If you love my project and you want to make a donations i will be happy, you can
 
 Thanks for all your support, you welcome to leave feedback to improve this project.
 
+```
 BTC: 1KLeksUbR3fP2DH2rY9RMiiqGwcFca8vPB
+```
+
+[![gitcheese.com](https://s3.amazonaws.com/gitcheese-ui-master/images/badge.svg)](https://www.gitcheese.com/donate/users/359161/repos/76598226)
 
 ## Supported hardware
 - Philips Hue

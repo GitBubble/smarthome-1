@@ -14,6 +14,9 @@ BTC: 1KLeksUbR3fP2DH2rY9RMiiqGwcFca8vPB
 
 [![gitcheese.com](https://s3.amazonaws.com/gitcheese-ui-master/images/badge.svg)](https://www.gitcheese.com/donate/users/359161/repos/76598226)
 
+## Micro services - plugins
+Philips Hue: https://github.com/parisnakitakejser/smarthome-microservice-philips-hue
+
 ## Supported hardware
 - Philips Hue
   - Bridge
